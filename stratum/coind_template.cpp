@@ -315,6 +315,12 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 	strcpy(templ->flags, flags ? flags : "");
 	strcpy(templ->priceinfo, "");
 
+	// LTC mw-eb
+	const char *mweb = json_get_string(json_result, "mweb");
+	if (mweb) {
+		strcpy(templ->mweb, mweb);
+	}
+
 	// LBC Claim Tree (with wallet gbt patch)
 	const char *claim = json_get_string(json_result, "claimtrie");
 	if (claim) {
@@ -560,6 +566,7 @@ bool coind_create_job(YAAMP_COIND *coind, bool force)
 		return true;
 	}
 
+	if (strlen(templ->mweb) > 0) templ->has_segwit_txs = true;
 	////////////////////////////////////////////////////////////////////////////////////////
 
 	int height = coind->height;
